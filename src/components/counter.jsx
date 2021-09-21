@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class Counter extends React.Component {
   state = {
-    count: 0,
+    value: this.props.value,
     tags: ["tag1", "tag2", "tag3"],
     imageUrl: "https://picsum.photos/200",
   };
@@ -13,9 +13,10 @@ class Counter extends React.Component {
     color: "black",
   };
 
-  constructor() {
+  // Make sure to add props to the constructor
+  constructor(props) {
     // Have access to this in the constructor
-    super();
+    super(props);
     // Methods themselves are objects, so have methods and properties
     // This bind makes sure this is referencing the current Counter object
     this.handleIncrement = this.handleIncrement.bind(this);
@@ -24,13 +25,13 @@ class Counter extends React.Component {
   // Bootstrap formatting
   getBadgeClasses() {
     let classes = "badge m-2 ";
-    classes += this.state.count === 0 ? "bg-warning" : "bg-primary";
+    classes += this.state.value === 0 ? "bg-warning" : "bg-primary";
     return classes;
   }
 
-  formatCount() {
-    const { count } = this.state;
-    return count === 0 ? <h1>Zero</h1> : count;
+  formatValue() {
+    const { value } = this.state;
+    return value === 0 ? <h1>Zero</h1> : value;
   }
 
   renderTags() {
@@ -47,7 +48,7 @@ class Counter extends React.Component {
   }
 
   handleIncrement() {
-    this.setState({ count: this.state.count + 1 });
+    this.setState({ value: this.state.value + 1 });
 
     // NOTE:
     // obj.method(); this referring to obj
@@ -69,14 +70,21 @@ class Counter extends React.Component {
           <img src={this.state.imageUrl} alt="" className="m-2" />
         </div>
         <div>
+          {this.props.children}
           <span style={this.styles} className={this.getBadgeClasses()}>
-            {this.formatCount()}
+            {this.formatValue()}
           </span>
           <button
             onClick={this.handleIncrement}
             className="btn btn-secondary btn-sm m-2"
           >
             Increment
+          </button>
+          <button
+            onClick={this.props.onDelete}
+            className="btn btn-danger btn-sm m-2"
+          >
+            Delete
           </button>
           {/* Both operands are truthy so it returns the second one */}
           {this.state.tags.length === 0 && "Enter some tags!"}
