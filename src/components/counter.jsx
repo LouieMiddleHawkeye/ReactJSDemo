@@ -1,59 +1,36 @@
 import React, { Component } from "react";
 
 class Counter extends React.Component {
-  state = {
-    value: this.props.value,
-    tags: ["tag1", "tag2", "tag3"],
-    imageUrl: "https://picsum.photos/200",
-  };
-
   styles = {
     fontSize: 12,
     fontWeight: "bold",
     color: "black",
   };
 
-  // Make sure to add props to the constructor
-  constructor(props) {
-    // Have access to this in the constructor
-    super(props);
-    // Methods themselves are objects, so have methods and properties
-    // This bind makes sure this is referencing the current Counter object
-    this.handleIncrement = this.handleIncrement.bind(this);
-  }
+  // // Make sure to add props to the constructor
+  // constructor(props) {
+  //   // Have access to this in the constructor
+  //   super(props);
+  //   // Methods themselves are objects, so have methods and properties
+  //   // This bind makes sure this is referencing the current Counter object
+  //   // this.handleIncrement = this.handleIncrement.bind(this);
+  // }
 
   // Bootstrap formatting
   getBadgeClasses() {
     let classes = "badge m-2 ";
-    classes += this.state.value === 0 ? "bg-warning" : "bg-primary";
+    classes += this.props.counter.value === 0 ? "bg-warning" : "bg-primary";
     return classes;
   }
 
-  formatValue() {
-    const { value } = this.state;
-    return value === 0 ? <h1>Zero</h1> : value;
+  formatCount() {
+    const { value } = this.props.counter;
+    return value === 0 ? "Zero" : value;
   }
 
-  renderTags() {
-    if (this.state.tags.length === 0)
-      return <p className="badge bg-warning"> There are no tags! </p>;
-
-    return (
-      <ul>
-        {this.state.tags.map((tag) => (
-          <li key={tag}> {tag} </li>
-        ))}
-      </ul>
-    );
-  }
-
-  handleIncrement() {
-    this.setState({ value: this.state.value + 1 });
-
-    // NOTE:
-    // obj.method(); this referring to obj
-    // function(); this returns reference to window object, if strict mode enabled this will return undefined
-  }
+  // NOTE:
+  // obj.method(); this referring to obj
+  // function(); this returns reference to window object, if strict mode enabled this will return undefined
 
   // NOTE:
   // The alternative to using the constructor to get `this` is to use an arrow function
@@ -65,32 +42,26 @@ class Counter extends React.Component {
     // These are JSX expressions - will run `React.createElement` hence why we need the import
     return (
       // Use this instead of div to stop the index.html having a div contain a div
-      <React.Fragment>
-        <div>
-          <img src={this.state.imageUrl} alt="" className="m-2" />
-        </div>
+      <div>
         <div>
           {this.props.children}
           <span style={this.styles} className={this.getBadgeClasses()}>
-            {this.formatValue()}
+            {this.formatCount()}
           </span>
           <button
-            onClick={this.handleIncrement}
+            onClick={() => this.props.onIncrement(this.props.counter)}
             className="btn btn-secondary btn-sm m-2"
           >
             Increment
           </button>
           <button
-            onClick={this.props.onDelete}
+            onClick={() => this.props.onDelete(this.props.counter.id)}
             className="btn btn-danger btn-sm m-2"
           >
             Delete
           </button>
-          {/* Both operands are truthy so it returns the second one */}
-          {this.state.tags.length === 0 && "Enter some tags!"}
-          {this.renderTags()}
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
